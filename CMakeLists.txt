@@ -1,0 +1,7 @@
+set(CMAKE_AUTOMOC ON)
+find_library( NAMES libmpdclient)
+find_path(LIBMPDCLIENT_INCLUDE_DIR connection.h PATH_SUFFIXES mpd)
+find_library(LIBMPDCLIENT_LIBRARY NAMES mpdclient)
+include_directories(${QtIncDirs} ${CMAKE_CURRENT_BINARY_DIR} ${LIBMPDCLIENT_INCLUDE_DIR})
+add_library(QtMpdClient qmpdclient.cpp qmpdmonitor.cpp qmpdsong.cpp qmpdstatus.cpp) 
+target_link_libraries(QtMpdClient ${LIBMPDCLIENT_LIBRARY} ${QtLibs})
