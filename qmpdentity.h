@@ -26,13 +26,13 @@
 class QMpdEntity
 {
 public:
-    QMpdEntity(const mpd_entity *song = 0);
-    QMpdEntity(mpd_entity *song);
+    QMpdEntity(const mpd_entity *entity = 0);
+    QMpdEntity(mpd_entity *entity);
     ~QMpdEntity();
 
 public:
-    void setEntity(const mpd_entity *song);
-    void setEntity(mpd_entity *song);
+    void setEntity(const mpd_entity *entity);
+    void setEntity(mpd_entity *entity);
 
     mpd_entity_type getType() const;
     const QMpdSong& getSong() const;

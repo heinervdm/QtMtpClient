@@ -98,9 +98,9 @@ int QMpdSong::year() const
 
 QTime QMpdSong::totalTime() const
 {
-    QTime totalTime(0, 0);
+    QTime tt(0, 0);
 
-    return totalTime.addSecs(duration_);
+    return tt.addSecs(duration_);
 }
 
 int QMpdSong::duration() const

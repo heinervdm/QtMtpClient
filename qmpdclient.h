@@ -50,7 +50,7 @@ public:
     QMpdSongList getSongList();
     QMpdSongList syncPlaylist();
     QMpdSongList playlist();
-    QMpdEntityList* ls(const QString &path = "");
+    QList<QMpdEntity> ls(const QString &path = "");
 
     int  addToPlaylist(const QString &uri, int pos = -1);
     void shufflePlaylist();

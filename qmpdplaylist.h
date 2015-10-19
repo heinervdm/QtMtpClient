@@ -20,6 +20,8 @@
 
 #include <mpd/client.h>
 
+#include <QList>
+
 class QMpdPlaylist
 {
 public:

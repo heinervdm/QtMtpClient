@@ -24,8 +24,8 @@
 #include "qmpddirectory.h"
 #include "qmpdplaylist.h"
 
-QMpdClient::QMpdClient(QObject *parent)
-    : QObject(parent)
+QMpdClient::QMpdClient(QObject *p)
+    : QObject(p)
 {
     host_ = QString();
     port_ = 0;
@@ -118,26 +118,26 @@ int QMpdClient::updateDB(const QString &path)
 
 QMpdStatus QMpdClient::status()
 {
-    QMpdStatus status;
+    QMpdStatus st;
 
     if (connection_)
     {
-        status.setStatus(mpd_run_status(connection_));
+        st.setStatus(mpd_run_status(connection_));
     }
 
-    return status;
+    return st;
 }
 
 QMpdSong QMpdClient::song()
 {
-    QMpdSong song;
+    QMpdSong s;
 
     if (connection_)
     {
-        song.setSong(mpd_run_current_song(connection_));
+        s.setSong(mpd_run_current_song(connection_));
     }
 
-    return song;
+    return s;
 }
 
 QMpdSongList QMpdClient::getSongList()
@@ -151,23 +151,23 @@ QMpdSongList QMpdClient::getSongList()
         mpd_send_list_all_meta(connection_, "");
         while ((entity = mpd_recv_entity(connection_)) != 0)
         {
-            const struct mpd_directory *dir;
-            const struct mpd_song *song;
-            const struct mpd_playlist *playlist;
+//             const struct mpd_directory *d;
+            const struct mpd_song *s;
+//             const struct mpd_playlist *pl;
 
             mpd_entity_type type = mpd_entity_get_type(entity);
 
             switch (type)
             {
             case MPD_ENTITY_TYPE_DIRECTORY:
-                dir = mpd_entity_get_directory(entity);
+//                 d = mpd_entity_get_directory(entity);
                 break;
             case MPD_ENTITY_TYPE_SONG:
-                song = mpd_entity_get_song(entity);
-                songList.append(QMpdSong(song));
+                s = mpd_entity_get_song(entity);
+                songList.append(QMpdSong(s));
                 break;
             case MPD_ENTITY_TYPE_PLAYLIST:
-                playlist = mpd_entity_get_playlist(entity);
+//                 pl = mpd_entity_get_playlist(entity);
                 break;
             case MPD_ENTITY_TYPE_UNKNOWN:
             default:
@@ -183,19 +183,19 @@ QMpdSongList QMpdClient::getSongList()
     return songList;
 }
 
-QMpdEntityList* QMpdClient::ls(const QString &path)
+QList<QMpdEntity> QMpdClient::ls(const QString &path)
 {
-    QMpdEntityList *list = new QMpdEntityList;
+    QList<QMpdEntity> list;
     if (connection_)
     {
-        QMpdEntity *entity;
+        QMpdEntity entity;
         mpd_entity *e;
 
         mpd_send_list_meta(connection_, path.toStdString().c_str());
         while ((e = mpd_recv_entity(connection_)) != 0)
         {
-            entity->setEntity(e);
-            list->append(entity);
+            entity.setEntity(e);
+            list.append(entity);
         }
 
         mpd_response_finish(connection_);
@@ -209,11 +209,11 @@ QMpdSongList QMpdClient::syncPlaylist()
 
     if (connection_ && mpd_send_list_queue_meta(connection_))
     {
-        mpd_song *song;
+        mpd_song *s;
 
-        while ((song = mpd_recv_song(connection_)) != 0)
+        while ((s = mpd_recv_song(connection_)) != 0)
         {
-            songList_.append(QMpdSong(song));
+            songList_.append(QMpdSong(s));
         }
 
         mpd_response_finish(connection_);
@@ -440,9 +440,9 @@ void QMpdClient::onModeChanged(QMpdStatus::Mode mode)
     emit modeChanged(mode);
 }
 
-void QMpdClient::onSongChanged(const QMpdSong& song)
+void QMpdClient::onSongChanged(const QMpdSong& s)
 {
-    emit songChanged(song);
+    emit songChanged(s);
 }
 
 void QMpdClient::onElapsedSecondsAtStatusChange(int elapsedSeconds)

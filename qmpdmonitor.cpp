@@ -19,8 +19,8 @@
 
 #include "qmpdmonitor.h"
 
-QMpdMonitor::QMpdMonitor(const QString &host, int port, int timeout, QObject *parent)
-    : QThread(parent)
+QMpdMonitor::QMpdMonitor(const QString &host, int port, int timeout, QObject *p)
+    : QThread(p)
 {
     qRegisterMetaType<QMpdStatus::State>();
     qRegisterMetaType<QMpdStatus::Mode>();
@@ -47,7 +47,7 @@ void QMpdMonitor::run()
 
     while(active_)
     {
-        QMpdStatus status(mpd_run_status(connection_));
+        QMpdStatus st(mpd_run_status(connection_));
 
         if (mpdEvent & (MPD_IDLE_QUEUE | MPD_IDLE_PLAYER))
         {
@@ -55,7 +55,7 @@ void QMpdMonitor::run()
             {
                 mpdEvent &= ~MPD_IDLE_QUEUE;
 
-                if (status_.playlistVersion() != status.playlistVersion())
+                if (status_.playlistVersion() != st.playlistVersion())
                 {
                     emit playlistChanged();
                 }
@@ -65,15 +65,15 @@ void QMpdMonitor::run()
             {
                 mpdEvent &= ~MPD_IDLE_PLAYER;
 
-                if (status_.state() != status.state())
+                if (status_.state() != st.state())
                 {
-                    emit stateChanged(status.state());
+                    emit stateChanged(st.state());
                 }
 
-                emit elapsedSecondsAtStatusChange(status.elapsedSeconds());
+                emit elapsedSecondsAtStatusChange(st.elapsedSeconds());
             }
 
-            if (status_.songId() != status.songId())
+            if (status_.songId() != st.songId())
             {
                 emit songChanged(QMpdSong(mpd_run_current_song(connection_)));
             }
@@ -83,9 +83,9 @@ void QMpdMonitor::run()
         {
             mpdEvent &= ~MPD_IDLE_MIXER;
 
-            if (status_.volume() != status.volume())
+            if (status_.volume() != st.volume())
             {
-                emit volumeChanged(status.volume());
+                emit volumeChanged(st.volume());
             }
         }
 
@@ -93,9 +93,9 @@ void QMpdMonitor::run()
         {
             mpdEvent &= ~MPD_IDLE_OPTIONS;
 
-            if (status_.mode() != status.mode())
+            if (status_.mode() != st.mode())
             {
-                emit modeChanged(status.mode());
+                emit modeChanged(st.mode());
             }
         }
 
@@ -105,7 +105,7 @@ void QMpdMonitor::run()
             {
                 emit databaseUpdated(true);
             }
-            else if (!status.isUpdating())
+            else if (!st.isUpdating())
             {
                 emit databaseUpdated(false);
             }
@@ -130,7 +130,7 @@ void QMpdMonitor::run()
             }
         }
 
-        status_ = status;
+        status_ = st;
 
         if (firstRun)
         {
