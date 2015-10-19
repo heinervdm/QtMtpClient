@@ -18,7 +18,7 @@
 #ifndef QMPDSTATUS_H_
 #define QMPDSTATUS_H_
 
-#include <QTime>
+#include <QtCore/QTime>
 #include <mpd/client.h>
 
 class QMpdStatus

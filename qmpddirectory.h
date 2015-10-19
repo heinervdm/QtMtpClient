@@ -20,6 +20,8 @@
 
 #include <mpd/client.h>
 
+#include <QtCore/QDateTime>
+
 class QMpdDirectory
 {
 public:
@@ -31,8 +33,12 @@ public:
     void setDirectory(const mpd_directory *song);
     void setDirectory(mpd_directory *song);
 
+    QString& getPath();
+    QDateTime& getLastModifiedTime();
 
 private:
+    QString path_;
+    QDateTime mtime_;
 
 };
 

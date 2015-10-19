@@ -15,9 +15,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <QDebug>
+#include <QtCore/QDebug>
+#include <QtCore/QString>
 
 #include "qmpdclient.h"
+#include "qmpdentity.h"
+#include "qmpdsong.h"
+#include "qmpddirectory.h"
+#include "qmpdplaylist.h"
 
 QMpdClient::QMpdClient(QObject *parent)
     : QObject(parent)
@@ -176,6 +181,26 @@ QMpdSongList QMpdClient::getSongList()
     }
 
     return songList;
+}
+
+QMpdEntityList* QMpdClient::ls(const QString &path)
+{
+    QMpdEntityList *list = new QMpdEntityList;
+    if (connection_)
+    {
+        QMpdEntity *entity;
+        mpd_entity *e;
+
+        mpd_send_list_meta(connection_, path.toStdString().c_str());
+        while ((e = mpd_recv_entity(connection_)) != 0)
+        {
+            entity->setEntity(e);
+            list->append(entity);
+        }
+
+        mpd_response_finish(connection_);
+    }
+    return list;
 }
 
 QMpdSongList QMpdClient::syncPlaylist()

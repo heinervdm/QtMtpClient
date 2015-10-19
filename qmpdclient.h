@@ -18,12 +18,14 @@
 #ifndef QMPDCLIENT_H_
 #define QMPDCLIENT_H_
 
-#include <QObject>
-#include <QString>
-#include <QStringList>
+#include <QtCore/QObject>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
 
 #include "qmpdstatus.h"
 #include "qmpdmonitor.h"
+#include "qmpdentity.h"
+#include "qmpdsong.h"
 
 class QMpdClient : public QObject
 {
@@ -48,6 +50,7 @@ public:
     QMpdSongList getSongList();
     QMpdSongList syncPlaylist();
     QMpdSongList playlist();
+    QMpdEntityList* ls(const QString &path = "");
 
     int  addToPlaylist(const QString &uri, int pos = -1);
     void shufflePlaylist();

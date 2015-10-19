@@ -18,8 +18,8 @@
 #ifndef QMPDMONITOR_H_
 #define QMPDMONITOR_H_
 
-#include <QThread>
-#include <QMetaType>
+#include <QtCore/QThread>
+#include <QtCore/QMetaType>
 
 #include "qmpdstatus.h"
 #include "qmpdsong.h"

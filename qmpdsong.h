@@ -18,8 +18,8 @@
 #ifndef QMPDSONG_H_
 #define QMPDSONG_H_
 
-#include <QString>
-#include <QTime>
+#include <QtCore/QString>
+#include <QtCore/QTime>
 #include <mpd/client.h>
 
 class QMpdSong

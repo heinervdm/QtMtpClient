@@ -35,11 +35,13 @@ void QMpdDirectory::setDirectory(const mpd_directory *directory)
 {
     if (directory)
     {
-
+        path_ = QString(mpd_directory_get_path(directory));
+        mtime_.fromMSecsSinceEpoch(mpd_directory_get_last_modified(directory));
     }
     else
     {
-
+        path_ = QString();
+        mtime_.fromMSecsSinceEpoch(0);
     }
 }
 
