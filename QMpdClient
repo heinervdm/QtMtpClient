@@ -1,1 +1,5 @@
 #include "qmpdclient.h"
+#include "qmpdentity.h"
+#include "qmpdsong.h"
+#include "qmpddirectory.h"
+#include "qmpdplaylist.h"

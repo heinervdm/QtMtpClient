@@ -53,3 +53,11 @@ void QMpdDirectory::setDirectory(mpd_directory *directory)
         mpd_directory_free(directory);
     }
 }
+
+QString& QMpdDirectory::getPath() {
+	return path_;
+}
+
+QDateTime& QMpdDirectory::getLastModifiedTime() {
+	return mtime_;
+}
