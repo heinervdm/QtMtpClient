@@ -140,49 +140,6 @@ QMpdSong QMpdClient::song()
     return s;
 }
 
-QMpdSongList QMpdClient::getSongList()
-{
-    QMpdSongList songList;
-
-    if (connection_)
-    {
-        mpd_entity *entity;
-
-        mpd_send_list_all_meta(connection_, "");
-        while ((entity = mpd_recv_entity(connection_)) != 0)
-        {
-//             const struct mpd_directory *d;
-            const struct mpd_song *s;
-//             const struct mpd_playlist *pl;
-
-            mpd_entity_type type = mpd_entity_get_type(entity);
-
-            switch (type)
-            {
-            case MPD_ENTITY_TYPE_DIRECTORY:
-//                 d = mpd_entity_get_directory(entity);
-                break;
-            case MPD_ENTITY_TYPE_SONG:
-                s = mpd_entity_get_song(entity);
-                songList.append(QMpdSong(s));
-                break;
-            case MPD_ENTITY_TYPE_PLAYLIST:
-//                 pl = mpd_entity_get_playlist(entity);
-                break;
-            case MPD_ENTITY_TYPE_UNKNOWN:
-            default:
-                break;
-            }
-
-            mpd_entity_free(entity);
-        }
-
-        mpd_response_finish(connection_);
-    }
-
-    return songList;
-}
-
 QList<QMpdEntity> QMpdClient::ls(const QString &path)
 {
     QList<QMpdEntity> list;
@@ -235,7 +192,7 @@ int QMpdClient::addToPlaylist(const QString &uri, int pos)
     {
         if (pos >= 0)
         {
-            id_ = mpd_run_add_id_to(connection_, uri.toAscii().data(), pos);
+            id_ = mpd_run_add_id_to(connection_, uri.toStdString().data(), pos);
 
             if (id_ != -1)
             {
@@ -257,7 +214,7 @@ int QMpdClient::addToPlaylist(const QString &uri, int pos)
                 }
             }
 
-            id_ = mpd_run_add_id(connection_, uri.toAscii().data());
+            id_ = mpd_run_add_id(connection_, uri.toStdString().data());
 
             if (id_ != -1)
             {
@@ -267,7 +224,7 @@ int QMpdClient::addToPlaylist(const QString &uri, int pos)
             {
                 mpd_connection_clear_error(connection_);
 
-                if (mpd_run_add(connection_, uri.toAscii().data()))
+                if (mpd_run_add(connection_, uri.toStdString().data()))
                 {
                     syncPlaylist();
                 }
@@ -413,6 +370,11 @@ int QMpdClient::latestSongId() const
 int QMpdClient::latestSongPosition() const
 {
     return pos_;
+}
+
+void QMpdClient::loadPlaylist(QString name)
+{
+	mpd_run_load(connection_, name.toStdString().c_str());
 }
 
 void QMpdClient::onInitialized()

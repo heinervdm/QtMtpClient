@@ -41,7 +41,7 @@ void QMpdMonitor::run()
     int mpdEvent = MPD_IDLE_QUEUE | MPD_IDLE_PLAYER | MPD_IDLE_MIXER | MPD_IDLE_OPTIONS;
     bool firstRun = true;
 
-    qDebug() << "QMpdMonitor: monitor thread started";
+    qDebug() << "QMpdMonitor:" << "monitor thread started";
 
     connectToServer();
 
@@ -57,6 +57,7 @@ void QMpdMonitor::run()
 
                 if (status_.playlistVersion() != st.playlistVersion())
                 {
+					qDebug() << "QMpdMonitor:" << "Playlist changed";
                     emit playlistChanged();
                 }
             }
@@ -67,6 +68,7 @@ void QMpdMonitor::run()
 
                 if (status_.state() != st.state())
                 {
+					qDebug() << "QMpdMonitor:" << "State changed:" + st.state();
                     emit stateChanged(st.state());
                 }
 
@@ -75,7 +77,9 @@ void QMpdMonitor::run()
 
             if (status_.songId() != st.songId())
             {
-                emit songChanged(QMpdSong(mpd_run_current_song(connection_)));
+				QMpdSong s = QMpdSong(mpd_run_current_song(connection_));
+				qDebug() << "QMpdMonitor:" << "Song changed, title: " << s.title() << "album: " << s.album() << "artist:" << s.artist();
+                emit songChanged(s);
             }
         }
 
@@ -85,6 +89,7 @@ void QMpdMonitor::run()
 
             if (status_.volume() != st.volume())
             {
+				qDebug() << "QMpdMonitor:" << "Volume changed"+ st.volume();
                 emit volumeChanged(st.volume());
             }
         }
@@ -95,6 +100,7 @@ void QMpdMonitor::run()
 
             if (status_.mode() != st.mode())
             {
+				qDebug() << "QMpdMonitor:" << "Mode changed";
                 emit modeChanged(st.mode());
             }
         }
@@ -126,7 +132,7 @@ void QMpdMonitor::run()
 
             if (mpdEvent & i)
             {
-                qDebug() << "unhandled mpd event:" << name;
+                qDebug() << "QMpdMonitor:" << "unhandled mpd event:" << name;
             }
         }
 
@@ -147,7 +153,7 @@ void QMpdMonitor::run()
         connection_ = 0;
     }
 
-    qDebug() << "QMpdMonitor: monitor thread stopped";
+    qDebug() << "QMpdMonitor:" << "monitor thread stopped";
 }
 
 void QMpdMonitor::stop()

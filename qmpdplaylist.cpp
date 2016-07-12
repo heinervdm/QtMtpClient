@@ -16,6 +16,7 @@
  */
 
 #include "qmpdplaylist.h"
+#include <QString>
 
 QMpdPlaylist::QMpdPlaylist(const mpd_playlist *playlist)
 {
@@ -35,11 +36,11 @@ void QMpdPlaylist::setPlaylist(const mpd_playlist *playlist)
 {
     if (playlist)
     {
-
+		playlist_ = mpd_playlist_get_path(playlist);
     }
     else
     {
-
+		playlist_ = "";
     }
 }
 
@@ -50,4 +51,9 @@ void QMpdPlaylist::setPlaylist(mpd_playlist *playlist)
     {
         mpd_playlist_free(playlist);
     }
+}
+
+QString QMpdPlaylist::getName()
+{
+	return playlist_;
 }

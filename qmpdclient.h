@@ -47,7 +47,6 @@ public:
 
     QMpdStatus   status();
     QMpdSong     song();
-    QMpdSongList getSongList();
     QMpdSongList syncPlaylist();
     QMpdSongList playlist();
     QList<QMpdEntity> ls(const QString &path = "");
@@ -67,6 +66,7 @@ public:
     void setVolume(int volume);
     int  latestSongId() const;
     int  latestSongPosition() const;
+	void loadPlaylist(QString name);
 
 Q_SIGNALS:
     void initialized();

@@ -21,6 +21,7 @@
 #include <mpd/client.h>
 
 #include <QList>
+#include <QString>
 
 class QMpdPlaylist
 {
@@ -32,9 +33,10 @@ public:
 public:
     void setPlaylist(const mpd_playlist *song);
     void setPlaylist(mpd_playlist *song);
+	QString getName();
 
 private:
-
+    QString playlist_;
 };
 
 typedef QList<QMpdPlaylist> QMpdPlaylistList;
