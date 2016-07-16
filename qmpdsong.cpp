@@ -17,21 +17,21 @@
 
 #include "qmpdsong.h"
 
-QMpdSong::QMpdSong(const mpd_song *song)
+QMpdSong::QMpdSong(const mpd_song *song, int i)
 {
-    setSong(song);
+    setSong(song, i);
 }
 
-QMpdSong::QMpdSong(mpd_song *song)
+QMpdSong::QMpdSong(mpd_song *song, int i)
 {
-    setSong(song);
+    setSong(song, i);
 }
 
 QMpdSong::~QMpdSong()
 {
 }
 
-void QMpdSong::setSong(const mpd_song *song)
+void QMpdSong::setSong(const mpd_song *song, int i)
 {
     if (song)
     {
@@ -43,6 +43,7 @@ void QMpdSong::setSong(const mpd_song *song)
         year_ = QString(mpd_song_get_tag(song, MPD_TAG_DATE, 0)).toInt();
         duration_ = mpd_song_get_duration(song);
         uri_ = QString(mpd_song_get_uri(song));
+		id_ = i;
     }
     else
     {
@@ -54,12 +55,13 @@ void QMpdSong::setSong(const mpd_song *song)
         year_ = 0;
         duration_ = 0;
         uri_ = QString();
+		id_ = i;
     }
 }
 
-void QMpdSong::setSong(mpd_song *song)
+void QMpdSong::setSong(mpd_song *song, int i)
 {
-    setSong((const mpd_song *)song);
+    setSong((const mpd_song *)song, i);
     if (song)
     {
         mpd_song_free(song);
@@ -111,4 +113,9 @@ int QMpdSong::duration() const
 QString QMpdSong::uri() const
 {
     return uri_;
+}
+
+int QMpdSong::id() const
+{
+	return id_;
 }

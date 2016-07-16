@@ -25,13 +25,13 @@
 class QMpdSong
 {
 public:
-    QMpdSong(const mpd_song *song = 0);
-    QMpdSong(mpd_song *song);
+    QMpdSong(const mpd_song *song = 0, int id = -1);
+    QMpdSong(mpd_song *song, int id = -1);
     ~QMpdSong();
 
 public:
-    void setSong(const mpd_song *song);
-    void setSong(mpd_song *song);
+    void setSong(const mpd_song *song, int id = -1);
+    void setSong(mpd_song *song, int id = -1);
 
     QString title() const;
     QString artist() const;
@@ -42,6 +42,7 @@ public:
     QTime   totalTime() const;
     int     duration() const;
     QString uri() const;
+	int     id() const;
 
 private:
     QString title_;
@@ -52,6 +53,7 @@ private:
     int     year_;
     int     duration_;
     QString uri_;
+	int     id_;
 };
 
 typedef QList<QMpdSong> QMpdSongList;

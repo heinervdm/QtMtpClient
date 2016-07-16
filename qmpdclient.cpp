@@ -170,7 +170,7 @@ QMpdSongList QMpdClient::syncPlaylist()
 
         while ((s = mpd_recv_song(connection_)) != 0)
         {
-            songList_.append(QMpdSong(s));
+            songList_.append(QMpdSong(s, mpd_song_get_id(s)));
         }
 
         mpd_response_finish(connection_);
@@ -197,7 +197,7 @@ int QMpdClient::addToPlaylist(const QString &uri, int pos)
             if (id_ != -1)
             {
                 pos_ = pos;
-                songList_.insert(pos, QMpdSong(mpd_run_get_queue_song_id(connection_, id_)));
+                songList_.insert(pos, QMpdSong(mpd_run_get_queue_song_id(connection_, id_), id_));
             }
             else
             {
@@ -210,7 +210,7 @@ int QMpdClient::addToPlaylist(const QString &uri, int pos)
             {
                 if (uri == songList_.at(i).uri())
                 {
-                    return id_;
+                    return songList_.at(i).id();
                 }
             }
 
@@ -218,7 +218,7 @@ int QMpdClient::addToPlaylist(const QString &uri, int pos)
 
             if (id_ != -1)
             {
-                songList_.append(QMpdSong(mpd_run_get_queue_song_id(connection_, id_)));
+                songList_.append(QMpdSong(mpd_run_get_queue_song_id(connection_, id_), id_));
             }
             else
             {
